@@ -1,0 +1,55 @@
+
+Help (short reference) file for the sm_producer_consumer (SM Producer Consumer) tool.
+----------------------------------------
+
+NAME
+        sm_producer_consumer
+
+SYNOPSIS
+        SM Producer Consumer
+
+Please, see README and INSTALL files for more info about features and install instructions.
+
+
+sm_producer_consumer (SM Producer Consumer) tool:
+--------------------
+sm_producer_consumer (SM Producer Consumer) tool contains:
+
+    - sm_producer_consumer - executable, that creates several threads, which provide generation
+                                and processing data in queues;
+
+--------------------
+    sm_producer_consumer:
+    --------------------
+
+    - help and other documentation can be found in the directory: _bin/share/smansoft/doc/;
+        files:
+            CHANGELOG
+            HELP
+            INSTALL
+            LICENSE
+            README
+    - lunch sm_producer_consumer - executable module in the directory _bin/bin/;
+    - during execution sm_producer_consumer writes log out to the console (only FATAL, ERROR, WARN, INFO level log output) 
+        and creates and writes log out to the file sm_producer_consumer.log in the directory _bin/log/;
+    - during execution sm_producer_consumer creates and writes result data in the text file sm_producer_consumer.out.txt
+        in the directory _bin/share/smansoft/sm_producer_consumer/;
+    - text file sm_producer_consumer.out.txt contains lines:
+        ...
+        len:    69  line:   244741611334462929462293993020129958718826196490336836470023389215244
+        len:    49  line:   2240642429276121085525484928762158240951859482090
+        len:    74  line:   23831737427159236930173339537667581345064763015348580786373695072447459008
+        len:    20  line:   42787525462261195973
+        ...
+    - for exit running application, just press Ctrl-C (Ctrl-Z) or create file (with any content or empty)
+        .stop in the directory _bin/share/smansoft/sm_producer_consumer/;
+    - if application finds .stop in the directory _bin/share/smansoft/sm_producer_consumer/ all threads will be stopped and 
+        application prints to the log file final state of the queue property of the CSMConsumerFin object;
+
+--------------------
+
+Please, see README and INSTALL files for more info about features and install instructions.
+
+--------------------
+    Copyright (C) 2021 SManSoft <http://www.smansoft.com/>
+                        Sergey Manoylo <info@smansoft.com>

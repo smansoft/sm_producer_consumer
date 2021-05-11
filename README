@@ -1,0 +1,33 @@
+
+ReadMe (user documentation) file for the sm_producer_consumer (SM Producer Consumer) tool.
+----------------------------------------
+
+In this document user can find necessary info about usage of this tool
+(sm_producer_consumer (SM Producer Consumer)) and reference of all functionality of this tool.
+
+Features of the sm_producer_consumer (SM Producer Consumer) tool:
+--------------------
+
+    - Multi-thread demo/template, that resolves producer-consumer problem (bounded-buffer problem);
+    - Using thread support primitives (classes, api), which are parts of the C++ (C++11) language, defined by
+        the standard ISO/IEC 14882:2011;
+    - Using several producer-consumer objects, which use suite of limited-size queues
+        shared by various number of threads with various productivity/periodicity/frequency;
+    - Writing processed results into the text file (in the special directory);
+    - Logging results and applications workflow;
+    - Multi-thread (thread-safe) log library, that supports output to the log file and/or console;
+    - Multi-thread (thread-safe) log library, supports log level output (TRACE, DEBUG, INFO, WARN, ERROR, FATAL);
+    - Usage string secure library in some C-language functions;
+    - Self-stopping support, when file '.stop' is placed in the special directory;
+
+Downloading the sm_producer_consumer (SM Producer Consumer) tool sources files:
+--------------------
+
+    Source files of the sm_producer_consumer (SM Producer Consumer) tool can be found here:
+        http://smansoft.com/sm_producer_consumer/
+    .
+
+--------------------
+    Copyright (C) 2021 SManSoft <http://www.smansoft.com/>
+                        Sergey Manoylo <info@smansoft.com>
+

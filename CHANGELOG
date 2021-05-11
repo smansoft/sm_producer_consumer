@@ -1,0 +1,21 @@
+This is the changelog file for the sm_producer_consumer (SM Producer Consumer) tool.
+
+Release 0.0.1.1 (2021-05-11)
+===========================
+
+This is the first public release of sm_producer_consumer (SM Producer Consumer) tool.
+
+Features of the sm_producer_consumer (SM Producer Consumer) tool:
+--------------------
+
+    - Multi-thread demo/template, that resolves producer-consumer problem (bounded-buffer problem);
+    - Using thread support primitives (classes, api), which are parts of the C++ (C++11) language, defined by
+        the standard ISO/IEC 14882:2011;
+    - Using several producer-consumer objects, which use suite of limited-size queues
+        shared by various number of threads with various productivity/periodicity/frequency;
+    - Writing processed results into the text file (in the special directory);
+    - Logging results and applications workflow;
+    - Multi-thread (thread-safe) log library, that supports output to the log file and/or console;
+    - Multi-thread (thread-safe) log library, supports log level output (TRACE, DEBUG, INFO, WARN, ERROR, FATAL);
+    - Usage string secure library in some C-language functions;
+    - Self-stopping support, when file '.stop' is placed in the special directory;
