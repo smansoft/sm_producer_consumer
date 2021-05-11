@@ -1,8 +1,8 @@
 /*
- *	Copyright (c) 2021 SManSoft <http://www.smansoft.com/>
- *	Sergey Manoylo <info@smansoft.com>
+ *  Copyright (c) 2021 SManSoft <http://www.smansoft.com/>
+ *  Sergey Manoylo <info@smansoft.com>
  *
- * 	sm_tools.h
+ *  sm_tools.h
  *
  *  Created on: Apr 26, 2021
  *      Author: sman

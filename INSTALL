@@ -274,269 +274,269 @@ Main solution classes:
 --------------------
 
 /**
- *	CSMProducerFactory
+ *  CSMProducerFactory
  *
- *	multi-thread synchronized singleton;
+ *  multi-thread synchronized singleton;
  *
- *	storage and control CSMProducerBase based (inherited) objects (several instances),
- *	i.e. instances of
- *	follow classes CSMProducerType1, CSMProducerType2,
- *	CSMProducerType3, CSMProducerType4, CSMProducerType5
+ *  storage and control CSMProducerBase based (inherited) objects (several instances),
+ *  i.e. instances of
+ *  follow classes CSMProducerType1, CSMProducerType2,
+ *  CSMProducerType3, CSMProducerType4, CSMProducerType5
  */
 class CSMProducerFactory;
-	std::vector<std::shared_ptr<CSMProducerBase>> m_producers;	// vector of pointers to CSMProducerBase
-																// (CSMProducerType1, CSMProducerType2, ... CSMProducerType5) objects
-	std::mutex m_mtx_producers;									// synchronization primitive, that makes
-																// m_mtx_producers an thread-safe queue
+    std::vector<std::shared_ptr<CSMProducerBase>> m_producers;  // vector of pointers to CSMProducerBase
+                                                                // (CSMProducerType1, CSMProducerType2, ... CSMProducerType5) objects
+    std::mutex m_mtx_producers;                                 // synchronization primitive, that makes
+                                                                // m_mtx_producers an thread-safe queue
 
-	static CSMProducerFactory* m_instance;						// pointer to instance of the singleton
-	static std::mutex m_mtx_instance;							// thread-safe pointer
+    static CSMProducerFactory* m_instance;                      // pointer to instance of the singleton
+    static std::mutex m_mtx_instance;                           // thread-safe pointer
 
 /**
- *	CSMConsumerFactory
+ *  CSMConsumerFactory
  *
- *	multi-thread synchronized singleton;
+ *  multi-thread synchronized singleton;
  *
- *	storage and control CSMConsumerMid objects (several, created for every Producer)
- *	and CSMConsumerFin object (single object);
+ *  storage and control CSMConsumerMid objects (several, created for every Producer)
+ *  and CSMConsumerFin object (single object);
  */
 class CSMConsumerFactory;
-	std::vector<std::shared_ptr<CSMConsumerMid>> m_consumer_mids;	// vector of pointers to CSMConsumerMid objects
-	std::mutex	m_mtx_consumer_mids;								// synchronization primitive, that makes
-																	// m_consumer_mids an thread-safe queue
+    std::vector<std::shared_ptr<CSMConsumerMid>> m_consumer_mids;   // vector of pointers to CSMConsumerMid objects
+    std::mutex  m_mtx_consumer_mids;                                // synchronization primitive, that makes
+                                                                    // m_consumer_mids an thread-safe queue
 
-	std::shared_ptr<CSMConsumerFin> m_consumer_fin;	// pointer to the instance of CSMConsumerFin
+    std::shared_ptr<CSMConsumerFin> m_consumer_fin; // pointer to the instance of CSMConsumerFin
 
-	static CSMConsumerFactory* m_instance;	// pointer to instance of the singleton
-	static std::mutex m_mtx_instance;		// thread-safe pointer
+    static CSMConsumerFactory* m_instance;  // pointer to instance of the singleton
+    static std::mutex m_mtx_instance;       // thread-safe pointer
 
 /**
- *	CSMProducerItem
+ *  CSMProducerItem
  *
- *	data class, that just contains array of unsigned chars
- *	(std::shared_ptr<unsigned char> m_data)
- *	and length of this array (m_size);
+ *  data class, that just contains array of unsigned chars
+ *  (std::shared_ptr<unsigned char> m_data)
+ *  and length of this array (m_size);
  *
- *	class provides interface (api), that allows to get and change these data
- *	(array of unsigned chars and length of this array);
+ *  class provides interface (api), that allows to get and change these data
+ *  (array of unsigned chars and length of this array);
  */
 class CSMProducerItem;
-	std::shared_ptr<unsigned char> m_data;		// data (array of unsigned chars), created by one of Producer classes
-												// CSMProducerType1, CSMProducerType2, ... CSMProducerType5
-	unsigned int m_size;						// length of m_data array (including last zero symbol)
+    std::shared_ptr<unsigned char> m_data;      // data (array of unsigned chars), created by one of Producer classes
+                                                // CSMProducerType1, CSMProducerType2, ... CSMProducerType5
+    unsigned int m_size;                        // length of m_data array (including last zero symbol)
 
 /**
- *	CSMConsumerItem
+ *  CSMConsumerItem
  *
- *	data class, that just contains array of unsigned chars
- *	(std::shared_ptr<unsigned char> m_data)
- *	and length of this array (m_size);
+ *  data class, that just contains array of unsigned chars
+ *  (std::shared_ptr<unsigned char> m_data)
+ *  and length of this array (m_size);
  *
- *	class provides interface (api), that allows to get and change these data
- *	(array of unsigned chars and length of this array);
+ *  class provides interface (api), that allows to get and change these data
+ *  (array of unsigned chars and length of this array);
  */
 class CSMConsumerItem;
-	std::shared_ptr<unsigned char> m_data;		// data (array of unsigned chars), created by Consumer class
-												// during converting (copying) from CSMProducerItem
-	unsigned int m_size;						// length of m_data array (including last zero symbol)
+    std::shared_ptr<unsigned char> m_data;      // data (array of unsigned chars), created by Consumer class
+                                                // during converting (copying) from CSMProducerItem
+    unsigned int m_size;                        // length of m_data array (including last zero symbol)
 
 /**
- *	CSMProducerBase
+ *  CSMProducerBase
  *
- *	base class of suite of Producers, which provide generation
- *	of Item data instances of the CSMProducerItem class,
- *	using separate thread;
+ *  base class of suite of Producers, which provide generation
+ *  of Item data instances of the CSMProducerItem class,
+ *  using separate thread;
  *
- *	generated items are inserted into queue:
- *	std::queue<CSMProducerItem> m_items_queue;
+ *  generated items are inserted into queue:
+ *  std::queue<CSMProducerItem> m_items_queue;
  *
- *	m_items_queue has limited size (defined by m_items_queue_max);
+ *  m_items_queue has limited size (defined by m_items_queue_max);
  *
- *	extracts generated items from the queue:
- *	std::queue<CSMProducerItem> m_items_queue;
+ *  extracts generated items from the queue:
+ *  std::queue<CSMProducerItem> m_items_queue;
  *
- *	uses synchronizing primitives for access to the queue (m_items_queue):
- * 	std::mutex m_mtx_queue;
- *	std::condition_variable m_cv_queue;
+ *  uses synchronizing primitives for access to the queue (m_items_queue):
+ *  std::mutex m_mtx_queue;
+ *  std::condition_variable m_cv_queue;
  *
- *	periodicity of generation of items are defined by m_delay (sleep value)
+ *  periodicity of generation of items are defined by m_delay (sleep value)
  *
- *	producer(some ProducerType type) --> m_items_queue
+ *  producer(some ProducerType type) --> m_items_queue
  */
 class CSMProducerBase;
-	unsigned int m_max_num;	// max number of integers in random line,
-							// generated during one step
-	unsigned int m_delay;	// delay in msecs (sleep time in the thread)
+    unsigned int m_max_num; // max number of integers in random line,
+                            // generated during one step
+    unsigned int m_delay;   // delay in msecs (sleep time in the thread)
 
- 	unsigned int m_items_queue_max;	// max size of m_items_queue (queue of CSMProducerItem elements)
+    unsigned int m_items_queue_max; // max size of m_items_queue (queue of CSMProducerItem elements)
 
-	void genProducerItem();		// generation the CSMProducerItem and inserting it into
-								// std::queue<CSMProducerItem> m_items_queue
-								// is called by threadFunc (by the thread function)
-	void threadFunc();			// thread function (is used by std::unique_ptr<std::thread>m_thread)
+    void genProducerItem();     // generation the CSMProducerItem and inserting it into
+                                // std::queue<CSMProducerItem> m_items_queue
+                                // is called by threadFunc (by the thread function)
+    void threadFunc();          // thread function (is used by std::unique_ptr<std::thread>m_thread)
 
-	const ProducerType m_type; 	// type of producer
-								// same as in CSMProducerType1, CSMProducerType2, ... CSMProducerType5
-								// Producers and consumers, which have same type are joined (are used same
-								// std::queue<CSMProducerItem> m_items_queue)
+    const ProducerType m_type;  // type of producer
+                                // same as in CSMProducerType1, CSMProducerType2, ... CSMProducerType5
+                                // Producers and consumers, which have same type are joined (are used same
+                                // std::queue<CSMProducerItem> m_items_queue)
 
-	std::queue<CSMProducerItem> m_items_queue;	// queue, that is generated in the thread, created by the producer
-	std::mutex m_mtx_queue;						// synchronization primitive (mutex) for access to m_items_queue
-	std::condition_variable m_cv_queue;			// synchronization primitive (mutex) for access to m_items_queue
-												// condition is used, when m_mtx_queue is locked, but
-												// m_items_queue is empty or its size equals m_items_queue_max
-												// i.e. maximum value and new items can't be added
-												// and producer should wait till CSMConsumerFin extracts
-												// item from m_items_queue
+    std::queue<CSMProducerItem> m_items_queue;  // queue, that is generated in the thread, created by the producer
+    std::mutex m_mtx_queue;                     // synchronization primitive (mutex) for access to m_items_queue
+    std::condition_variable m_cv_queue;         // synchronization primitive (mutex) for access to m_items_queue
+                                                // condition is used, when m_mtx_queue is locked, but
+                                                // m_items_queue is empty or its size equals m_items_queue_max
+                                                // i.e. maximum value and new items can't be added
+                                                // and producer should wait till CSMConsumerFin extracts
+                                                // item from m_items_queue
 
-	std::unique_ptr<std::thread>m_thread;		// thread, that is used for generation of CSMProducerItem in m_items_queue
-	bool m_run_thread;							// if m_run_thread == false, thread (m_thread) will be finished
+    std::unique_ptr<std::thread>m_thread;       // thread, that is used for generation of CSMProducerItem in m_items_queue
+    bool m_run_thread;                          // if m_run_thread == false, thread (m_thread) will be finished
 
-	std::mt19937 m_rnd_eng; // default constructed, seeded with fixed seed
+    std::mt19937 m_rnd_eng; // default constructed, seeded with fixed seed
     
-	void genProducerItem();		// generation the CSMProducerItem and inserting it into
-								// std::queue<CSMProducerItem> m_items_queue
-								// is called by threadFunc (by the thread function)
-	void threadFunc();			// thread function (is used by std::unique_ptr<std::thread>m_thread)
+    void genProducerItem();     // generation the CSMProducerItem and inserting it into
+                                // std::queue<CSMProducerItem> m_items_queue
+                                // is called by threadFunc (by the thread function)
+    void threadFunc();          // thread function (is used by std::unique_ptr<std::thread>m_thread)
     
 
 /**
- *	CSMProducerType1
+ *  CSMProducerType1
  *
- *	type of Producer 1
+ *  type of Producer 1
  *
  *  uses:
  *
- *	m_max_num = DEF_MAX_SIZE_RND_TYPE1;
- *	m_delay = DEF_PRODUCER_DELAY_TYPE1;
- *	m_items_queue_max = DEF_PRODUCER_QUEUE_TYPE1_MAX;
+ *  m_max_num = DEF_MAX_SIZE_RND_TYPE1;
+ *  m_delay = DEF_PRODUCER_DELAY_TYPE1;
+ *  m_items_queue_max = DEF_PRODUCER_QUEUE_TYPE1_MAX;
  *
- *	DEF_MAX_SIZE_RND_TYPE1				8
- *	DEF_PRODUCER_DELAY_TYPE1			111
- *	DEF_PRODUCER_QUEUE_TYPE1_MAX		100
+ *  DEF_MAX_SIZE_RND_TYPE1              8
+ *  DEF_PRODUCER_DELAY_TYPE1            111
+ *  DEF_PRODUCER_QUEUE_TYPE1_MAX        100
  */
 class CSMProducerType1 : public CSMProducerBase;
 
 /**
- *	CSMProducerType2
+ *  CSMProducerType2
  *
- *	type of Producer 2
+ *  type of Producer 2
  *
  *  uses:
  *
- *	m_max_num = DEF_PRODUCER_DELAY_TYPE2;
- *	m_delay = DEF_PRODUCER_DELAY_TYPE2;
- *	m_items_queue_max = DEF_PRODUCER_QUEUE_TYPE2_MAX;
+ *  m_max_num = DEF_PRODUCER_DELAY_TYPE2;
+ *  m_delay = DEF_PRODUCER_DELAY_TYPE2;
+ *  m_items_queue_max = DEF_PRODUCER_QUEUE_TYPE2_MAX;
  *
- *	DEF_MAX_SIZE_RND_TYPE2				16
- *	DEF_PRODUCER_DELAY_TYPE2			222
- *	DEF_PRODUCER_QUEUE_TYPE2_MAX		100
+ *  DEF_MAX_SIZE_RND_TYPE2              16
+ *  DEF_PRODUCER_DELAY_TYPE2            222
+ *  DEF_PRODUCER_QUEUE_TYPE2_MAX        100
  */
 class CSMProducerType2 : public CSMProducerBase;
 
 /**
- *	CSMProducerType3
+ *  CSMProducerType3
  *
- *	type of Producer 3
+ *  type of Producer 3
  *
  *  uses:
  *
- *	m_max_num = DEF_PRODUCER_DELAY_TYPE3;
- *	m_delay = DEF_PRODUCER_DELAY_TYPE3;
- *	m_items_queue_max = DEF_PRODUCER_QUEUE_TYPE3_MAX;
+ *  m_max_num = DEF_PRODUCER_DELAY_TYPE3;
+ *  m_delay = DEF_PRODUCER_DELAY_TYPE3;
+ *  m_items_queue_max = DEF_PRODUCER_QUEUE_TYPE3_MAX;
  *
- *	DEF_MAX_SIZE_RND_TYPE3				32
- *	DEF_PRODUCER_DELAY_TYPE3			333
- *	DEF_PRODUCER_QUEUE_TYPE3_MAX		100
+ *  DEF_MAX_SIZE_RND_TYPE3              32
+ *  DEF_PRODUCER_DELAY_TYPE3            333
+ *  DEF_PRODUCER_QUEUE_TYPE3_MAX        100
  */
 class CSMProducerType3 : public CSMProducerBase;
 
 /**
- *	CSMProducerType4
+ *  CSMProducerType4
  *
- *	type of Producer 4
+ *  type of Producer 4
  *
  *  uses:
  *
- *	m_max_num = DEF_PRODUCER_DELAY_TYPE4;
- *	m_delay = DEF_PRODUCER_DELAY_TYPE4;
- *	m_items_queue_max = DEF_PRODUCER_QUEUE_TYPE4_MAX;
+ *  m_max_num = DEF_PRODUCER_DELAY_TYPE4;
+ *  m_delay = DEF_PRODUCER_DELAY_TYPE4;
+ *  m_items_queue_max = DEF_PRODUCER_QUEUE_TYPE4_MAX;
  *
- *	DEF_MAX_SIZE_RND_TYPE4				64
- *	DEF_PRODUCER_DELAY_TYPE4			555
- *	DEF_PRODUCER_QUEUE_TYPE4_MAX		100
+ *  DEF_MAX_SIZE_RND_TYPE4              64
+ *  DEF_PRODUCER_DELAY_TYPE4            555
+ *  DEF_PRODUCER_QUEUE_TYPE4_MAX        100
  */
 class CSMProducerType4 : public CSMProducerBase;
 
 /**
- *	CSMProducerType5
+ *  CSMProducerType5
  *
- *	type of Producer 5
+ *  type of Producer 5
  *
  *  uses:
  *
- *	m_max_num = DEF_PRODUCER_DELAY_TYPE5;
- *	m_delay = DEF_PRODUCER_DELAY_TYPE5;
- *	m_items_queue_max = DEF_PRODUCER_QUEUE_TYPE5_MAX;
+ *  m_max_num = DEF_PRODUCER_DELAY_TYPE5;
+ *  m_delay = DEF_PRODUCER_DELAY_TYPE5;
+ *  m_items_queue_max = DEF_PRODUCER_QUEUE_TYPE5_MAX;
  *
- *	DEF_MAX_SIZE_RND_TYPE5				128
- *	DEF_PRODUCER_DELAY_TYPE5			777
- *	DEF_PRODUCER_QUEUE_TYPE5_MAX		100
+ *  DEF_MAX_SIZE_RND_TYPE5              128
+ *  DEF_PRODUCER_DELAY_TYPE5            777
+ *  DEF_PRODUCER_QUEUE_TYPE5_MAX        100
  */
 class CSMProducerType5 : public CSMProducerBase;
 
 
 /**
- *	CSMConsumerMid
+ *  CSMConsumerMid
  *
- *	intermediate consumer class, that has some type
- *	(like CSMProducerType1, CSMProducerType2,... CSMProducerType5)
+ *  intermediate consumer class, that has some type
+ *  (like CSMProducerType1, CSMProducerType2,... CSMProducerType5)
  *
- *	instance of this class (CSMConsumerMid) is joined to
- *	the instance of producer class
- *	(CSMProducerType1, CSMProducerType2, ... CSMProducerType5, ProducerType producer_type);
+ *  instance of this class (CSMConsumerMid) is joined to
+ *  the instance of producer class
+ *  (CSMProducerType1, CSMProducerType2, ... CSMProducerType5, ProducerType producer_type);
  *
- *	this class creates thread, that reads data queue,
- *	m_items_queue (CSMProducerItem)
- *	that filled by the correspondent producer;
+ *  this class creates thread, that reads data queue,
+ *  m_items_queue (CSMProducerItem)
+ *  that filled by the correspondent producer;
  *
- *	this class extracts CSMProducerItem from m_items_queue,
- *	converts CSMProducerItem -> CSMConsumerItem
- *	and inserts CSMConsumerItem to
- *	std::queue<CSMConsumerItem> m_items_queue
- *	(one instance in the CSMConsumerFin class);
+ *  this class extracts CSMProducerItem from m_items_queue,
+ *  converts CSMProducerItem -> CSMConsumerItem
+ *  and inserts CSMConsumerItem to
+ *  std::queue<CSMConsumerItem> m_items_queue
+ *  (one instance in the CSMConsumerFin class);
  */
 class CSMConsumerMid;
-	void processProducerConsumerItem();			// is called by the threadFunc function
-												// provides processing of data:
-												// reading from (via CSMProducerBase *m_producer (one of CSMProducerType1, CSMProducerType2, ... CSMProducerType5)),
-												// generating CSMConsumerItem and inserting it to common/shared (for all Consumer threads) queue
-												// std::queue<CSMConsumerItem> m_items_queue
-												// in the CSMConsumerFin class
-	void threadFunc();							// thread function (is used by std::unique_ptr<std::thread>m_thread)
+    void processProducerConsumerItem();         // is called by the threadFunc function
+                                                // provides processing of data:
+                                                // reading from (via CSMProducerBase *m_producer (one of CSMProducerType1, CSMProducerType2, ... CSMProducerType5)),
+                                                // generating CSMConsumerItem and inserting it to common/shared (for all Consumer threads) queue
+                                                // std::queue<CSMConsumerItem> m_items_queue
+                                                // in the CSMConsumerFin class
+    void threadFunc();                          // thread function (is used by std::unique_ptr<std::thread>m_thread)
 
-	ProducerType 		m_producer_type;		// type of producer
-	CSMProducerBase 	*m_producer;			// pointer to joined producer (one of CSMProducerType1, CSMProducerType2, ... CSMProducerType5))
-												// initialized in the constructor and depends on (ProducerType m_producer_type)
+    ProducerType        m_producer_type;        // type of producer
+    CSMProducerBase     *m_producer;            // pointer to joined producer (one of CSMProducerType1, CSMProducerType2, ... CSMProducerType5))
+                                                // initialized in the constructor and depends on (ProducerType m_producer_type)
 
-	std::unique_ptr<std::thread>m_thread;		// thread, that is used for reading the queue from
-												// std::queue<CSMProducerItem> m_items_queue
-												// (via CSMProducerBase *m_producer (one of CSMProducerType1, CSMProducerType2, ... CSMProducerType5)),
-												// generation CSMConsumerItem and inserting it to
-												// std::queue<CSMConsumerItem> m_items_queue
-												// in the CSMConsumerFin class
-												// instance of the CSMConsumerFin class is obtained via singleton: CSMConsumerFactory
-	bool m_run_thread;							// if m_run_thread == false, thread (m_thread) will be finished
+    std::unique_ptr<std::thread>m_thread;       // thread, that is used for reading the queue from
+                                                // std::queue<CSMProducerItem> m_items_queue
+                                                // (via CSMProducerBase *m_producer (one of CSMProducerType1, CSMProducerType2, ... CSMProducerType5)),
+                                                // generation CSMConsumerItem and inserting it to
+                                                // std::queue<CSMConsumerItem> m_items_queue
+                                                // in the CSMConsumerFin class
+                                                // instance of the CSMConsumerFin class is obtained via singleton: CSMConsumerFactory
+    bool m_run_thread;                          // if m_run_thread == false, thread (m_thread) will be finished
 
-	unsigned int m_delay;						// delay in msecs (sleep time in the thread)
+    unsigned int m_delay;                       // delay in msecs (sleep time in the thread)
 
 /**
- *	CSMConsumerFin
+ *  CSMConsumerFin
  *
- *	final consumer class,contains queue of CSMConsumerItem elements:
- *	std::queue<CSMConsumerItem> m_items_queue;
+ *  final consumer class,contains queue of CSMConsumerItem elements:
+ *  std::queue<CSMConsumerItem> m_items_queue;
  *
- *	m_items_queue has limited size (defined by m_items_queue_max);
+ *  m_items_queue has limited size (defined by m_items_queue_max);
  *
  *  opens text file (m_consumer_output) (file path: m_consumer_output_fpath);
  *
@@ -545,45 +545,45 @@ class CSMConsumerMid;
  *  and writes content (unsigned char array and length) into
  *  the output text file (m_consumer_output) in the follow format;
  *
- *	len:	30	line:	165419817718862070872477220052
- *	len:	20	line:	39200062562017294509
- *	len:	50	line:	17602029623591885893229577471612569214254259623284
- *	len:	106	line:	2312287005485858224349874085119518972282993005321207792955811589305733100220415361105722182633373291193122
- * 	len:	57	line:	276877865641402651882762481943439227966147003631211487406
- * 	len:	30	line:	336727954911150551753810078128
- * 	len:	97	line:	4493950942307061909176887685717840987692401872029587605656171416438224493589713863559573367050933
+ *  len:    30  line:   165419817718862070872477220052
+ *  len:    20  line:   39200062562017294509
+ *  len:    50  line:   17602029623591885893229577471612569214254259623284
+ *  len:    106 line:   2312287005485858224349874085119518972282993005321207792955811589305733100220415361105722182633373291193122
+ *  len:    57  line:   276877865641402651882762481943439227966147003631211487406
+ *  len:    30  line:   336727954911150551753810078128
+ *  len:    97  line:   4493950942307061909176887685717840987692401872029587605656171416438224493589713863559573367050933
  *
- *	uses synchronizing primitives for access to the queue (m_items_queue):
- * 	std::mutex m_mtx_queue;
- *	std::condition_variable m_cv_queue;
+ *  uses synchronizing primitives for access to the queue (m_items_queue):
+ *  std::mutex m_mtx_queue;
+ *  std::condition_variable m_cv_queue;
  *
- *	periodicity of generation of items are defined, by m_delay (sleep value)
+ *  periodicity of generation of items are defined, by m_delay (sleep value)
  */
 class CSMConsumerFin;
-	void processConsumerItem();	// is called by the threadFunc() function
-								// - reading data (CSMConsumerItem) from std::queue<CSMConsumerItem> m_items_queue
-								// - writing data to the file std::ofstream	m_consumer_output
-	void threadFunc();			// thread function (is used by std::unique_ptr<std::thread>m_thread)
+    void processConsumerItem(); // is called by the threadFunc() function
+                                // - reading data (CSMConsumerItem) from std::queue<CSMConsumerItem> m_items_queue
+                                // - writing data to the file std::ofstream m_consumer_output
+    void threadFunc();          // thread function (is used by std::unique_ptr<std::thread>m_thread)
 
-	std::unique_ptr<std::thread>m_thread;		// thread of this consumer class, provides processing of data: threadFunc() -> readData()
-	bool m_run_thread;							// if m_run_thread == false, thread (m_thread) will be finished
+    std::unique_ptr<std::thread>m_thread;       // thread of this consumer class, provides processing of data: threadFunc() -> readData()
+    bool m_run_thread;                          // if m_run_thread == false, thread (m_thread) will be finished
 
-	unsigned int m_items_queue_max;				// max size of m_items_queue (queue of CSMConsumerItem elements)
-	std::queue<CSMConsumerItem> m_items_queue;	// queue of CSMConsumerItem elements, which are generated in threads, created by CSMConsumerMid objects
-	std::mutex	m_mtx_queue;					// synchronization primitive (mutex) for access to m_items_queue
-	std::condition_variable m_cv_queue;			// synchronization primitive (mutex) for access to m_items_queue
-												// condition is used, when m_mtx_queue is locked, but
-												// m_items_queue is empty or its size equals m_items_queue_max
-												// i.e. maximum value and new items can't be added
-												// and CSMConsumerMid, calling addConsumerItem, should wait till the readData function extracts
-												// item from m_items_queue
+    unsigned int m_items_queue_max;             // max size of m_items_queue (queue of CSMConsumerItem elements)
+    std::queue<CSMConsumerItem> m_items_queue;  // queue of CSMConsumerItem elements, which are generated in threads, created by CSMConsumerMid objects
+    std::mutex  m_mtx_queue;                    // synchronization primitive (mutex) for access to m_items_queue
+    std::condition_variable m_cv_queue;         // synchronization primitive (mutex) for access to m_items_queue
+                                                // condition is used, when m_mtx_queue is locked, but
+                                                // m_items_queue is empty or its size equals m_items_queue_max
+                                                // i.e. maximum value and new items can't be added
+                                                // and CSMConsumerMid, calling addConsumerItem, should wait till the readData function extracts
+                                                // item from m_items_queue
 
-	std::string			m_consumer_output_fpath;	// full file path of m_consumer_output
-	std::ofstream		m_consumer_output;			// file, where result data (lines) will be saved:
-													// len:	30	line:	165419817718862070872477220052
-													// len:	20	line:	39200062562017294509
+    std::string         m_consumer_output_fpath;    // full file path of m_consumer_output
+    std::ofstream       m_consumer_output;          // file, where result data (lines) will be saved:
+                                                    // len: 30  line:   165419817718862070872477220052
+                                                    // len: 20  line:   39200062562017294509
 
-	unsigned int m_delay;	// delay in msecs (sleep time in the thread)
+    unsigned int m_delay;   // delay in msecs (sleep time in the thread)
 
 Main workflow of the solution:
 --------------------
@@ -600,18 +600,18 @@ CSMProducerType4 --(adding in the thread 4)--> queue 4 <--(extracting in the thr
 CSMProducerType5 --(adding in the thread 5)--> queue 5 <--(extracting in the thread 10)-- CSMConsumerMid (instance 5)
 
 2.
-CSMConsumerMid (instance 1) --(adding in the thread 6 )--> | 					|
-CSMConsumerMid (instance 2) --(adding in the thread 7 )--> | common queue		|
-CSMConsumerMid (instance 3) --(adding in the thread 8 )--> | in the class		|
-CSMConsumerMid (instance 4) --(adding in the thread 9 )--> | CSMConsumerFin		|
-CSMConsumerMid (instance 5) --(adding in the thread 10)--> |					|
+CSMConsumerMid (instance 1) --(adding in the thread 6 )--> |                    |
+CSMConsumerMid (instance 2) --(adding in the thread 7 )--> | common queue       |
+CSMConsumerMid (instance 3) --(adding in the thread 8 )--> | in the class       |
+CSMConsumerMid (instance 4) --(adding in the thread 9 )--> | CSMConsumerFin     |
+CSMConsumerMid (instance 5) --(adding in the thread 10)--> |                    |
 
 3. 
-| 					|
-| common queue		|
-| in the class		| <--(extracting in the thread 11)-- CSMConsumerFin --(adding in the thread 11 )--> output file ("sm_producer_consumer.out.txt")
-| CSMConsumerFin	|
-|					|
+|                   |
+| common queue      |
+| in the class      | <--(extracting in the thread 11)-- CSMConsumerFin --(adding in the thread 11 )--> output file ("sm_producer_consumer.out.txt")
+| CSMConsumerFin    |
+|                   |
 
 4.
     main() --(main thread, created by OS, checking file)--> file .stop
@@ -629,7 +629,7 @@ Main workflow of the solution (description):
     and initializing, by factory classes-singletons CSMProducerFactory, CSMConsumerFactory;
 
 4. Every instance of producer (CSMProducerType1, CSMProducerType2, ... CSMProducerType5) has its own queue:
-	std::queue<CSMProducerItem> m_items_queue and defined max limit of this queue: unsigned int m_items_queue_max;
+    std::queue<CSMProducerItem> m_items_queue and defined max limit of this queue: unsigned int m_items_queue_max;
     
 5. Every producer creates it's own thread, that generates data object (CSMProducerItem) and inserts him into own queue:
     std::queue<CSMProducerItem> m_items_queue;
@@ -671,8 +671,8 @@ Main workflow of the solution (description):
     coordination of their work, if queues are empty or overflowed (size of queue equals to defined max limit of these queues);
     
 17. This problem (coordination of their work, if queues are empty or overflowed) has been resolved, using synchronizing primitives like:
-	std::mutex	m_mtx_queue;
-	std::condition_variable m_cv_queue;
+    std::mutex  m_mtx_queue;
+    std::condition_variable m_cv_queue;
     
 18. If during work, some queue (in producers (CSMProducerType1, CSMProducerType2, ... CSMProducerType5) or in the final consumer 
     CSMConsumerFin) is empty, in this case reading/extracting thread is suspended till writing/generating thread inserts new item;

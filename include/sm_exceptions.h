@@ -2,7 +2,7 @@
  *  Copyright (c) 2021 SManSoft <http://www.smansoft.com/>
  *  Sergey Manoylo <info@smansoft.com>
  *
- * 	sm_exceptions.h
+ *  sm_exceptions.h
  *
  *  Created on: Apr 26, 2021
  *      Author: sman
@@ -28,18 +28,18 @@ namespace sm_producer_consumer {
 class CSMBaseException : public std::exception
 {
 public:
-	CSMBaseException() noexcept;
-	CSMBaseException(const CSMBaseException &ex) noexcept;
-	CSMBaseException(const std::string &message) noexcept;
-	virtual ~CSMBaseException() noexcept;
+    CSMBaseException() noexcept;
+    CSMBaseException(const CSMBaseException &ex) noexcept;
+    CSMBaseException(const std::string &message) noexcept;
+    virtual ~CSMBaseException() noexcept;
 
-	CSMBaseException& operator = (const CSMBaseException &ex) noexcept;
+    CSMBaseException& operator = (const CSMBaseException &ex) noexcept;
 
-	virtual const char* what() const noexcept;
-	virtual const std::string message() const noexcept;
+    virtual const char* what() const noexcept;
+    virtual const std::string message() const noexcept;
 
 protected:
-	std::string m_message;
+    std::string m_message;
 
 private:
 
@@ -53,10 +53,10 @@ private:
 class CSMProducerException : public CSMBaseException
 {
 public:
-	CSMProducerException() noexcept;
-	CSMProducerException(const CSMProducerException &ex) noexcept;
-	CSMProducerException(const std::string &message) noexcept;
-	virtual ~CSMProducerException() noexcept;
+    CSMProducerException() noexcept;
+    CSMProducerException(const CSMProducerException &ex) noexcept;
+    CSMProducerException(const std::string &message) noexcept;
+    virtual ~CSMProducerException() noexcept;
 
 protected:
 
@@ -72,10 +72,10 @@ private:
 class CSMConsumerMidException : public CSMBaseException
 {
 public:
-	CSMConsumerMidException() noexcept;
-	CSMConsumerMidException(const CSMConsumerMidException &ex) noexcept;
-	CSMConsumerMidException(const std::string &message) noexcept;
-	virtual ~CSMConsumerMidException() noexcept;
+    CSMConsumerMidException() noexcept;
+    CSMConsumerMidException(const CSMConsumerMidException &ex) noexcept;
+    CSMConsumerMidException(const std::string &message) noexcept;
+    virtual ~CSMConsumerMidException() noexcept;
 
 protected:
 
@@ -91,10 +91,10 @@ private:
 class CSMConsumerFinException : public CSMBaseException
 {
 public:
-	CSMConsumerFinException() noexcept;
-	CSMConsumerFinException(const CSMConsumerFinException &ex) noexcept;
-	CSMConsumerFinException(const std::string &message) noexcept;
-	virtual ~CSMConsumerFinException() noexcept;
+    CSMConsumerFinException() noexcept;
+    CSMConsumerFinException(const CSMConsumerFinException &ex) noexcept;
+    CSMConsumerFinException(const std::string &message) noexcept;
+    virtual ~CSMConsumerFinException() noexcept;
 
 protected:
 
@@ -110,10 +110,10 @@ private:
 class CSMProducerFactoryException : public CSMBaseException
 {
 public:
-	CSMProducerFactoryException() noexcept;
-	CSMProducerFactoryException(const CSMProducerFactoryException &ex) noexcept;
-	CSMProducerFactoryException(const std::string &message) noexcept;
-	virtual ~CSMProducerFactoryException() noexcept;
+    CSMProducerFactoryException() noexcept;
+    CSMProducerFactoryException(const CSMProducerFactoryException &ex) noexcept;
+    CSMProducerFactoryException(const std::string &message) noexcept;
+    virtual ~CSMProducerFactoryException() noexcept;
 
 protected:
 
@@ -129,10 +129,10 @@ private:
 class CSMConsumerFactoryException : public CSMBaseException
 {
 public:
-	CSMConsumerFactoryException() noexcept;
-	CSMConsumerFactoryException(const CSMConsumerFactoryException &ex) noexcept;
-	CSMConsumerFactoryException(const std::string &message) noexcept;
-	virtual ~CSMConsumerFactoryException() noexcept;
+    CSMConsumerFactoryException() noexcept;
+    CSMConsumerFactoryException(const CSMConsumerFactoryException &ex) noexcept;
+    CSMConsumerFactoryException(const std::string &message) noexcept;
+    virtual ~CSMConsumerFactoryException() noexcept;
 
 protected:
 

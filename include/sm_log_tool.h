@@ -20,14 +20,14 @@ extern "C" {
 #endif
 
 /**
- * 	initializing and starting the log output
+ *  initializing and starting the log output
  */
-errno_t	sm_init_log();
+errno_t sm_init_log();
 
 /**
- * 	stopping and closing the log output
+ *  stopping and closing the log output
  */
-errno_t	sm_close_log();
+errno_t sm_close_log();
 
 #if defined __cplusplus
 }
